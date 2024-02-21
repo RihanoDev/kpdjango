@@ -1,0 +1,130 @@
+{% extends 'base_workplace.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+
+<div class="content-page">
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            {% include "base_page_workplace.html" %}
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <!-- Display details of the WorkplaceUserNetwork object -->
+                            <h4 class="header-title">Create Workplace Network</h4>
+                            <p></p>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><label for="from_user">From User:</label></td>
+                                        <td>
+                                            <select name="from_user" id="from_user" class="form-control">
+                                                {% for user in users %}
+                                                <option value="{{ user.id }}">{{ user.username }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="to_user">To User:</label></td>
+                                        <td>
+                                            <select name="to_user" id="to_user" class="form-control">
+                                                {% for user in users %}
+                                                <option value="{{ user.id }}">{{ user.username }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="posting_division">Posting Division:</label></td>
+                                        <td>
+                                            <select name="posting_division" id="posting_division" class="form-control">
+                                                {% for division in divisions %}
+                                                <option value="{{ division.id }}">{{ division.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="comment_division">Comment Division:</label></td>
+                                        <td>
+                                            <select name="comment_division" id="comment_division" class="form-control">
+                                                {% for division in divisions %}
+                                                <option value="{{ division.id }}">{{ division.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="posting_department">Posting Department:</label></td>
+                                        <td>
+                                            <select name="posting_department" id="posting_department" class="form-control">
+                                                {% for department in departments %}
+                                                <option value="{{ department.id }}">{{ department.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="comment_department">Comment Department:</label></td>
+                                        <td>
+                                            <select name="comment_department" id="comment_department" class="form-control">
+                                                {% for department in departments %}
+                                                <option value="{{ department.id }}">{{ department.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="amount">Amount:</label></td>
+                                        <td><input type="number" name="amount" id="amount" class="form-control" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="type_of_interaction">Interaction:</label></td>
+                                        <td>
+                                            <select name="type_of_interaction" id="type_of_interaction" class="form-control">
+                                                {% for interaction in interactions %}
+                                                <option value="{{ interaction.id }}">{{ interaction.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <button type="submit" class="btn btn-primary btn-sm mr-2">Create</button>
+                                    <a href="{% url 'workplaceUserNetwork:index' %}" class="btn btn-info btn-sm">
+                                        <i class="mdi mdi-backspace-outline"></i> Back
+                                    </a>
+                                </div>
+                            </form>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+            <!-- end row-->
+
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+
+    {% include "base_footer.html" %}
+
+</div>
+
+<!-- ============================================================== -->
+<!-- End Page content -->
+<!-- ============================================================== -->
+
+{% endblock %}

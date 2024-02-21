@@ -1,0 +1,166 @@
+{% extends 'base_workplace.html' %}
+
+{% load static %}
+
+{% block content %}
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+
+<div class="content-page">
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            {% include "base_page_workplace.html" %}
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <!-- Display details of the WorkplaceUserNetwork object -->
+                            <h4 class="header-title">Workplace Network Detail</h4>
+                            <p></p>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <th>From User:</th>
+                                        <td>{{ workplace_user_network.from_user }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>To User:</th>
+                                        <td>{{ workplace_user_network.to_user }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Posting Division:</th>
+                                        <td>{{ workplace_user_network.posting_division }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Comment Division:</th>
+                                        <td>{{ workplace_user_network.comment_division }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Posting Department:</th>
+                                        <td>{{ workplace_user_network.posting_department }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Comment Department:</th>
+                                        <td>{{ workplace_user_network.comment_department }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Amount:</th>
+                                        <td>{{ workplace_user_network.amount }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Type of Interaction:</th>
+                                        <td>{{ workplace_user_network.type_of_interaction }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <ul class="list-inline wizard mt-3">
+                                <li class="previous list-inline-item">
+                                    <a href="{% url 'workplaceUserNetwork:index' %}">
+                                        <button type="button" class="ladda-button btn btn-info"
+                                            data-style="slide-right"><i
+                                                class="mdi mdi-backspace-outline"></i> Back
+                                        </button>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+            <!-- end row-->
+
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+
+    {% include "base_footer.html" %}
+
+</div>
+
+<!-- ============================================================== -->
+<!-- End Page content -->
+<!-- ============================================================== -->
+
+{% endblock %}
+
+{% block js %}
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Include DataTables JS -->
+<script src="{% static 'libs/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'libs/datatables/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.html5.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.flash.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.print.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.keyTable.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.select.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/vfs_fonts.js' %}"></script>
+
+<!-- Custom JavaScript for DataTables and Selected Filters -->
+<script>
+    // Custom JavaScript for the selected filters
+    $("select").on("change", function() {
+        updateSelectedFilters();
+    });
+
+    function updateSelectedFilters() {
+        // Get selected options for Division and Type Of Interaction
+        var selectedDivisions = $("#division").val();
+        var selectedInteractions = $("#interaction_type").val();
+
+        // Show selected filters
+        var selectedFilters = "";
+        if (selectedDivisions.length > 0) {
+            selectedFilters += "<div class='selected-filters'>";
+            selectedDivisions.forEach(function(division) {
+                selectedFilters += "<span class='remove-filter' onclick='removeFilter(\"division\", \"" + division + "\")'>" + division + " &#10006;</span>";
+            });
+            selectedFilters += "</div>";
+        }
+
+        if (selectedInteractions.length > 0) {
+            selectedFilters += "<div class='selected-filters'>";
+            selectedInteractions.forEach(function(interaction) {
+                selectedFilters += "<span class='remove-filter' onclick='removeFilter(\"interaction_type\", \"" + interaction + "\")'>" + interaction + " &#10006;</span>";
+            });
+            selectedFilters += "</div>";
+        }
+
+        // Display the selected filters
+        $("#selected_filters").html(selectedFilters);
+    }
+
+    // Function to remove a selected filter
+    function removeFilter(filterType, value) {
+        $("#" + filterType + " option[value='" + value + "']").prop("selected", false);
+        updateSelectedFilters();
+    }
+
+    // Initialize DataTable
+    $(document).ready(function() {
+        var table = $('#state-saving-datatable').DataTable({
+            stateSave: true,
+            columnDefs: [
+                { targets: [7], orderable: false }, // Disable ordering for the last column (Action column)
+            ],
+        });
+    });
+</script>
+<!-- End Custom JavaScript for DataTables and Selected Filters -->
+
+{% endblock %}

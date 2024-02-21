@@ -1,0 +1,266 @@
+{% extends 'base_workplace.html' %}
+
+{% load static %}
+
+{% block css %}
+<!-- third party css -->
+<link href="{% static 'libs/datatables/dataTables.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'libs/datatables/responsive.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'libs/datatables/buttons.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'libs/datatables/select.bootstrap4.css' %}" rel="stylesheet" type="text/css" />
+<!-- Include CSS for Bootstrap and Custom Styles -->
+<style>
+    /* Custom Styles for the selected filters */
+    .selected-filters {
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    .selected-filters .remove-filter {
+        cursor: pointer;
+    }
+</style>
+<!-- third party css end -->
+
+<!-- Footable css -->
+<link href="{% static 'libs/footable/footable.core.min.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block content %}
+<!-- ============================================================== -->
+<!-- Start Page Content here -->
+<!-- ============================================================== -->
+
+<div class="content-page">
+    <div class="content">
+
+        <!-- Start Content-->
+        <div class="container-fluid">
+
+            {% include "base_page_workplace.html" %}
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="division">Division:</label>
+                                    <select name="division" id="division" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="interaction_type">Type Of Interaction:</label>
+                                    <select name="interaction_type" id="interaction_type" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="month_from">Month From:</label>
+                                    <select name="month_from" id="month_from" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                    
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="month_to">Month To:</label>
+                                    <select name="month_to" id="month_to" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div><!-- end col -->
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title">Workplace Network</h4>
+                            <div class="col-12 text-right">
+                                <a href="{% url 'workplaceUserNetwork:create' %}">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="mdi mdi-plus"></i> Create
+                                    </button>
+                                </a>
+                            </div>
+                            <p></p>
+                            <table id="state-saving-datatable" class="table activate-select dt-responsive nowrap">
+                                <thead>
+                                    <tr>
+                                        <!-- <th>Aplicant Name</th> -->
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Posting.Division</th>
+                                        <th>Comment.Division</th>
+                                        <th>Posting.Department</th>
+                                        <th>Comment.Department</th>
+                                        <th>Amount</th>
+                                        <!-- <th>Upload Date</th> -->
+                                        <th>Action</th>
+
+                                        <!--<th>Full Text</th>-->
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ item.from_user }}</td>
+                                        <td>{{ item.to_user }}</td>
+                                        <td>{{ item.posting_division }}</td>
+                                        <td>{{ item.comment_division }}</td>
+                                        <td>{{ item.posting_department }}</td>
+                                        <td>{{ item.comment_department }}</td>
+                                        <td>{{ item.amount }}</td>
+                                        <td>
+                                            <a href="{% url 'workplaceUserNetwork:edit' item.id %}">
+                                                <button type="button" class="ladda-button btn btn-success"
+                                                    data-style="slide-right">
+                                                    <i class="mdi mdi-square-edit-outline"></i> Edit
+                                                </button>
+                                            </a>
+                                            <a href="{% url 'workplaceUserNetwork:detail' item.id %}">
+                                                <button type="button" class="ladda-button btn btn-success"
+                                                    data-style="slide-right">
+                                                    <i class="mdi mdi-square-edit-outline"></i> Detail
+                                                </button>
+                                            </a>
+
+                                            <button type="button" class="btn btn-danger waves-effect waves-light"
+                                                data-toggle="modal" data-target=".bs-example-modal-center{{item.id}}">
+                                                <i class="mdi mdi-delete"></i> Delete
+                                            </button>
+
+                                            <div class="modal fade bs-example-modal-center{{item.id}}" tabindex="-1"
+                                                role="dialog" aria-labelledby="myCenterModalLabel" aria-hidden="true"
+                                                style="display: none;">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myCenterModalLabel">Are you sure
+                                                                to delete?</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">×</button>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary waves-effect"
+                                                                data-dismiss="modal">Close</button>
+                                                            <a href="{% url 'workplaceUserNetwork:delete' item.id %}">
+                                                                <button type="button"
+                                                                    class="btn btn-danger waves-effect waves-light"
+                                                                    data-style="slide-right">
+                                                                    <i class="mdi mdi-delete"></i> Delete
+                                                                </button>
+                                                            </a>
+                                                        </div>
+                                                    </div><!-- /.modal-content -->
+                                                </div><!-- /.modal-dialog -->
+                                            </div><!-- /.modal -->
+                                        </td>
+
+                                        <!--<td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed neque vel massa molestie tempus at in eros. Ut sed augue ac ante bibendum efficitur ac eget lectus. In vulputate justo nec mollis gravida. Aliquam tristique tincidunt elementum. Maecenas cursus mauris sit amet rhoncus semper. Suspendisse a augue at eros eleifend consequat nec volutpat purus. Aenean viverra viverra est sed sodales. Donec porta enim quis sem lacinia, ac ullamcorper tortor sodales. Maecenas pharetra tincidunt augue non varius. Nunc euismod ut ipsum quis porta. Sed tristique eros sed urna dictum, varius ultricies nulla vehicula. In posuere lectus nec mollis ultricies. Morbi semper ligula ac nibh tempor auctor. Ut varius posuere mi, ut dapibus ipsum cursus non. Aliquam non sapien sed nulla elementum suscipit ac ut nisi.</td>-->
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+            <!-- end row-->
+
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+
+    {% include "base_footer.html" %}
+
+</div>
+
+<!-- ============================================================== -->
+<!-- End Page content -->
+<!-- ============================================================== -->
+
+{% endblock %}
+
+{% block js %}
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Listen for changes in the select dropdowns and update the selected filters
+    $("select").on("change", function() {
+        updateSelectedFilters();
+    });
+
+    function updateSelectedFilters() {
+        // Get selected options for Division and Type Of Interaction
+        var selectedDivisions = $("#division").val();
+        var selectedInteractions = $("#interaction_type").val();
+
+        // Show selected filters
+        var selectedFilters = "";
+        if (selectedDivisions.length > 0) {
+            selectedFilters += "<div class='selected-filters'>";
+            selectedDivisions.forEach(function(division) {
+                selectedFilters += "<span class='remove-filter' onclick='removeFilter(\"division\", \"" + division + "\")'>" + division + " &#10006;</span>";
+            });
+            selectedFilters += "</div>";
+        }
+
+        if (selectedInteractions.length > 0) {
+            selectedFilters += "<div class='selected-filters'>";
+            selectedInteractions.forEach(function(interaction) {
+                selectedFilters += "<span class='remove-filter' onclick='removeFilter(\"interaction_type\", \"" + interaction + "\")'>" + interaction + " &#10006;</span>";
+            });
+            selectedFilters += "</div>";
+        }
+
+        // Display the selected filters
+        $("#selected_filters").html(selectedFilters);
+    }
+
+    // Function to remove a selected filter
+    function removeFilter(filterType, value) {
+        $("#" + filterType + " option[value='" + value + "']").prop("selected", false);
+        updateSelectedFilters();
+    }
+</script>
+<!-- third party js -->
+<script src="{% static 'libs/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'libs/datatables/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.html5.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.flash.min.js' %}"></script>
+<script src="{% static 'libs/datatables/buttons.print.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.keyTable.min.js' %}"></script>
+<script src="{% static 'libs/datatables/dataTables.select.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/pdfmake.min.js' %}"></script>
+<script src="{% static 'libs/pdfmake/vfs_fonts.js' %}"></script>
+<!-- third party js ends -->
+
+<!-- Datatables init -->
+<script src="{% static 'js/pages/datatables.init.js' %}"></script>
+
+
+{% endblock %}
